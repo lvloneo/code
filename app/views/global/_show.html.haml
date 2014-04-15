@@ -1,0 +1,26 @@
+%p#notice= notice
+
+%h1
+  = parent.title
+
+%p
+  %h3
+    = parent.description
+
+%p
+  %h3
+    = "#{childs.first.class}s:"
+
+%table
+  %tr
+    %th Title
+    %th Description
+    %th
+    %th
+    %th
+
+  - childs.each do |child|
+    %tr
+      %td= show_path(child)
+      %td= child.description
+
