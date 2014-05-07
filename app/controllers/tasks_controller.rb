@@ -61,6 +61,15 @@ class TasksController < ApplicationController
     end
   end
 
+  def irb
+    line = params[:line]
+    #line = line.slice(0,line.length-2)
+    policy = RubyCop::Policy.new
+    ast = RubyCop::NodeBuilder.build("#{line}")
+    @output = ast.accept(policy) ? eval(line) : 'Error'
+    render json: @output
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_task

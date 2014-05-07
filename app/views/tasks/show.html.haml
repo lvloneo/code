@@ -1,15 +1,47 @@
 %p#notice= notice
 
-%p
-  %b Title:
+%h1
   = @task.title
-%p
-  %b Description:
-  = @task.description
-%p
-  %b Topic:
-  = @task.topic_id
 
-= link_to 'Edit', edit_task_path(@task)
-\|
-= link_to 'Back', tasks_path
+%p
+  %h3
+    = @task.description
+
+:javascript
+
+  $(document).ready(function(){
+    function getline(){
+        return ($('.irb-log').size() + 1);
+    };
+    var label = $("<label>").attr('for', "from").text('2.0.0-p247 : 1 > ');
+    var input = $('<input type="text">').attr({id: 'line', name: 'line', autocomplete: "off"});
+
+    $('.irb-input').append(label);
+    $('.irb-input').append(input);
+    var i=0;
+
+    $("#line").keyup(function(e){
+
+        var code = e.which;
+        if(code==13) {
+          i++;
+          e.preventDefault();
+          var value = $('#line').val();
+          $.ajax({
+              type: 'GET',
+              url: '/irb',
+              data: {line: value },
+              success:function (data) {
+                  console.log(i)
+                  console.log(data);
+                  $('.irb-log:first').append('<div class="irb-log">2.0.0-p247 : '+ i +' > ' + data +' </div>');
+                  $("label[for='from']").text('2.0.0-p247 : '+ (i+1) +' > ');
+                  $('#line').val('');
+              },
+              error: function (){
+              },
+              datatype: 'json'
+          });
+        };
+    });
+  })

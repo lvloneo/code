@@ -3,6 +3,8 @@ Code::Application.routes.draw do
   ActiveAdmin.routes(self)
   resources :tasks
 
+  get 'irb', controller: 'tasks', method: 'irb'
+
   resources :topics
 
   resources :lessons
