@@ -62,12 +62,21 @@ class TasksController < ApplicationController
   end
 
   def irb
-    line = params[:line]
+    commands = params[:commands]
     #line = line.slice(0,line.length-2)
-    policy = RubyCop::Policy.new
-    ast = RubyCop::NodeBuilder.build("#{line}")
-    @output = ast.accept(policy) ? eval(line) : 'Error'
-    render json: @output
+    #policy = RubyCop::Policy.new
+    #ast = RubyCop::NodeBuilder.build("#{line}")
+    #@output = ast.accept(policy) ? eval("#{line}").inspect : 'Error'
+    code = ''
+    i = 0
+    commands.each do |command|
+      i += 1
+      code = i == commands.length ? code + "\n puts #{command}" : code + "\n #{command}"
+    end
+    sandie = Sandie.new(language: 'ruby')
+    stdout = sandie.evaluate(code: "#{code}")['stdout']
+    @output = stdout != '' ? stdout : sandie.evaluate(code: "#{code}")['stderr']
+    render json: {data: @output}
   end
 
   private

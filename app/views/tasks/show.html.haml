@@ -7,6 +7,10 @@
   %h3
     = @task.description
 
+.irb
+  .irb-log
+  .irb-input
+
 :javascript
 
   $(document).ready(function(){
@@ -19,6 +23,7 @@
     $('.irb-input').append(label);
     $('.irb-input').append(input);
     var i=0;
+    var commands=[];
 
     $("#line").keyup(function(e){
 
@@ -26,19 +31,22 @@
         if(code==13) {
           i++;
           e.preventDefault();
-          var value = $('#line').val();
+          var command = $('#line').val();
+          commands.push(command);
           $.ajax({
               type: 'GET',
-              url: '/irb',
-              data: {line: value },
+              url: '/irb.json',
+              data: {commands: commands},
               success:function (data) {
                   console.log(i)
-                  console.log(data);
-                  $('.irb-log:first').append('<div class="irb-log">2.0.0-p247 : '+ i +' > ' + data +' </div>');
+                  console.log(data['data']);
+                  $('.irb-log:first').append('<div class="irb-log">2.0.0-p247 : '+ i +' > ' + command +' </div>');
+                  $('.irb-log:first').append(' => ' + data['data'] +' </div>');
                   $("label[for='from']").text('2.0.0-p247 : '+ (i+1) +' > ');
                   $('#line').val('');
               },
               error: function (){
+                  console.log(data['data']);
               },
               datatype: 'json'
           });

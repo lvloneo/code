@@ -13,6 +13,7 @@ gem 'haml-rails'
 gem 'carrierwave'
 gem 'rmagick'
 gem 'ruby_cop'
+gem 'sandie'
 gem 'activeadmin', github: 'gregbell/active_admin'
 
 
