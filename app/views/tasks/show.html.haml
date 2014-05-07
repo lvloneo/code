@@ -1,15 +1,55 @@
 %p#notice= notice
 
-%p
-  %b Title:
+%h1
   = @task.title
-%p
-  %b Description:
-  = @task.description
-%p
-  %b Topic:
-  = @task.topic_id
 
-= link_to 'Edit', edit_task_path(@task)
-\|
-= link_to 'Back', tasks_path
+%p
+  %h3
+    = @task.description
+
+.irb
+  .irb-log
+  .irb-input
+
+:javascript
+
+  $(document).ready(function(){
+    function getline(){
+        return ($('.irb-log').size() + 1);
+    };
+    var label = $("<label>").attr('for', "from").text('2.0.0-p247 : 1 > ');
+    var input = $('<input type="text">').attr({id: 'line', name: 'line', autocomplete: "off"});
+
+    $('.irb-input').append(label);
+    $('.irb-input').append(input);
+    var i=0;
+    var commands=[];
+
+    $("#line").keyup(function(e){
+
+        var code = e.which;
+        if(code==13) {
+          i++;
+          e.preventDefault();
+          var command = $('#line').val();
+          commands.push(command);
+          $.ajax({
+              type: 'GET',
+              url: '/irb.json',
+              data: {commands: commands},
+              success:function (data) {
+                  console.log(i)
+                  console.log(data['data']);
+                  $('.irb-log:first').append('<div class="irb-log">2.0.0-p247 : '+ i +' > ' + command +' </div>');
+                  $('.irb-log:first').append(' => ' + data['data'] +' </div>');
+                  $("label[for='from']").text('2.0.0-p247 : '+ (i+1) +' > ');
+                  $('#line').val('');
+              },
+              error: function (){
+                  console.log(data['data']);
+              },
+              datatype: 'json'
+          });
+        };
+    });
+  })
