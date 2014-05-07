@@ -12,6 +12,10 @@ gem 'devise'
 gem 'haml-rails'
 gem 'carrierwave'
 gem 'rmagick'
+gem 'ruby_cop'
+gem 'activeadmin', github: 'gregbell/active_admin'
+
+
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
